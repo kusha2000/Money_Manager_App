@@ -112,7 +112,7 @@ class _AddNewExpenseState extends State<AddNewExpense> {
               ),
               keyboardType: TextInputType.text,
               maxLength: 50,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
             Row(
               children: [
@@ -130,6 +130,7 @@ class _AddNewExpenseState extends State<AddNewExpense> {
                       hintStyle: TextStyle(color: Colors.white),
                     ),
                     keyboardType: TextInputType.number,
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
                 Expanded(
