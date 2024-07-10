@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+
+part 'expense.g.dart';
 
 final uuid = const Uuid().v4();
 
@@ -17,6 +20,7 @@ final categoryIcons = {
   Category.others: Icons.more,
 };
 
+@HiveType(typeId: 1)
 class ExpenseModel {
   ExpenseModel(
       {required this.amount,
@@ -25,10 +29,19 @@ class ExpenseModel {
       required this.category})
       : id = uuid;
 
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final String title;
+
+  @HiveField(2)
   final double amount;
+
+  @HiveField(3)
   final DateTime date;
+
+  @HiveField(4)
   final Category category;
 
   String get getFormattedDate {

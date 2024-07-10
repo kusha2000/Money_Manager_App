@@ -90,88 +90,126 @@ class _AddNewExpenseState extends State<AddNewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          TextField(
-            controller: _titleController,
-            decoration: const InputDecoration(
-              hintText: "Add new Expense title",
-              label: Text("Title"),
-            ),
-            keyboardType: TextInputType.text,
-            maxLength: 50,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _amountController,
-                  decoration: const InputDecoration(
-                    helperText: "Enter the amount",
-                    label: Text("Amount"),
-                  ),
-                  keyboardType: TextInputType.number,
+    return Container(
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 22, 28, 39),
+        border: Border.all(color: Colors.white, width: 2),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(
+                hintText: "Add new Expense title",
+                hintStyle: TextStyle(color: Colors.white),
+                label: Text(
+                  "Title",
+                  style: TextStyle(color: Colors.white70),
                 ),
               ),
-              Expanded(
-                child: Row(
+              keyboardType: TextInputType.text,
+              maxLength: 50,
+              style: TextStyle(color: Colors.white),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _amountController,
+                    decoration: const InputDecoration(
+                      helperText: "Enter the amount",
+                      label: Text(
+                        "Amount",
+                        style: TextStyle(
+                          color: Colors.white70,
+                        ),
+                      ),
+                      hintStyle: TextStyle(color: Colors.white),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        formattedDate.format(_selectedDate),
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: _openDateModal,
+                        icon: const Icon(Icons.date_range_outlined),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                DropdownButton(
+                    value: _selectedCategory,
+                    dropdownColor: Colors.black,
+                    items: Category.values
+                        .map(
+                          (Category) => DropdownMenuItem(
+                              value: Category,
+                              child: Text(
+                                Category.name,
+                                style: TextStyle(color: Colors.white),
+                              )),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedCategory = value!;
+                      });
+                    }),
+                Expanded(
+                    child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(formattedDate.format(_selectedDate)),
-                    IconButton(
-                      onPressed: _openDateModal,
-                      icon: const Icon(Icons.date_range_outlined),
-                    )
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: const ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.redAccent)),
+                      child: const Text(
+                        "Close",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: _handleFormSubmit,
+                      style: const ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.greenAccent)),
+                      child: const Text(
+                        "Save",
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
                   ],
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              DropdownButton(
-                  value: _selectedCategory,
-                  items: Category.values
-                      .map(
-                        (Category) => DropdownMenuItem(
-                            value: Category, child: Text(Category.name)),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCategory = value!;
-                    });
-                  }),
-              Expanded(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: const ButtonStyle(
-                        backgroundColor:
-                            MaterialStatePropertyAll(Colors.redAccent)),
-                    child: const Text("Close"),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: _handleFormSubmit,
-                    style: const ButtonStyle(
-                        backgroundColor:
-                            MaterialStatePropertyAll(Colors.greenAccent)),
-                    child: const Text("Save"),
-                  ),
-                ],
-              ))
-            ],
-          ),
-        ],
+                ))
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

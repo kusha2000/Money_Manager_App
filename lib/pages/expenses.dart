@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:money_manager_app/models/expense.dart';
+import 'package:money_manager_app/server/database.dart';
 import 'package:money_manager_app/widgets/add_new_expense.dart';
 import 'package:money_manager_app/widgets/expenses_list.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -12,18 +14,21 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
-  final List<ExpenseModel> _expenseList = [
-    ExpenseModel(
-        amount: 12.5,
-        date: DateTime.now(),
-        title: "Cake",
-        category: Category.food),
-    ExpenseModel(
-        amount: 10,
-        date: DateTime.now(),
-        title: "Books",
-        category: Category.education)
-  ];
+  // final List<ExpenseModel> _expenseList = [
+  //   ExpenseModel(
+  //       amount: 12.5,
+  //       date: DateTime.now(),
+  //       title: "Cake",
+  //       category: Category.food),
+  //   ExpenseModel(
+  //       amount: 10,
+  //       date: DateTime.now(),
+  //       title: "Books",
+  //       category: Category.education)
+  // ];
+
+  final _myBox = Hive.box("expenseDatabase");
+  Database db = Database();
 
   Map<String, double> dataMap = {
     "Food": 0,
@@ -36,9 +41,11 @@ class _ExpensesState extends State<Expenses> {
 
   void onAddNewExpense(ExpenseModel expense) {
     setState(() {
-      _expenseList.add(expense);
+      //_expenseList.add(expense);
+      db.expenseList.add(expense);
       calCategoryValues();
     });
+    db.updateData();
   }
 
   void _openAddExpensesOverlay() {
@@ -53,20 +60,25 @@ class _ExpensesState extends State<Expenses> {
 
   void onDeleteExpense(ExpenseModel expense) {
     ExpenseModel deletingExpense = expense;
-    final int removingIndex = _expenseList.indexOf(expense);
+    //final int removingIndex = _expenseList.indexOf(expense);
+    final int removingIndex = db.expenseList.indexOf(expense);
     setState(() {
-      _expenseList.remove(expense);
+      // _expenseList.remove(expense);
+      db.expenseList.remove(expense);
+      db.updateData();
       calCategoryValues();
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text("Delete Sucessfully"),
+        content: const Text("Delete Successfully"),
         action: SnackBarAction(
             label: "Undo",
             onPressed: () {
               setState(() {
-                _expenseList.insert(removingIndex, deletingExpense);
+                //_expenseList.insert(removingIndex, deletingExpense);
+                db.expenseList.insert(removingIndex, deletingExpense);
+                db.updateData();
                 calCategoryValues();
               });
             }),
@@ -89,7 +101,8 @@ class _ExpensesState extends State<Expenses> {
     double workValTotal = 0;
     double othersValTotal = 0;
 
-    for (final expense in _expenseList) {
+    //for (final expense in _expenseList) {
+    for (final expense in db.expenseList) {
       if (expense.category == Category.food) {
         foodValTotal += expense.amount;
       }
@@ -133,14 +146,26 @@ class _ExpensesState extends State<Expenses> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    calCategoryValues();
+    //calCategoryValues();
+
+    //if this is the first time create the initial data
+    if (_myBox.get("EXP_DATA") == null) {
+      db.createInitialDatabase();
+      calCategoryValues();
+    } else {
+      db.loadData();
+      calCategoryValues();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Money Manager"),
+        title: const Text(
+          "Money Manager",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.black,
         elevation: 0,
         actions: [
@@ -157,9 +182,19 @@ class _ExpensesState extends State<Expenses> {
         color: Color(0xFF0e1523),
         child: Column(
           children: [
-            PieChart(dataMap: dataMap),
+            PieChart(
+              dataMap: dataMap,
+              legendOptions: const LegendOptions(
+                showLegends: true,
+                legendTextStyle: TextStyle(
+                  color:
+                      Colors.white, // Set text color to white for legend items
+                ),
+              ),
+            ),
             ExpenseList(
-              expenseList: _expenseList,
+              //expenseList: _expenseList,
+              expenseList: db.expenseList,
               onDeleteExpense: onDeleteExpense,
             )
           ],
