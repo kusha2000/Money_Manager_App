@@ -19,4 +19,12 @@ Key Features:
 </ul>
 
 <h1>This is the Full Demo of the project</h1>
+
+<img src="https://github.com/kusha2000/Money_Manager_App/assets/127003267/a52142d7-f839-4ddb-909b-56b15b20cf6a" width="300" height="400"><br><br>
+
 <h1>This is the screenshot of my App</h1><br><br>
+
+<img src="https://github.com/kusha2000/Money_Manager_App/assets/127003267/9133ede2-436a-4c9d-898d-ebea8f39d5e2" width="300" height="400"><br><br>
+<img src="https://github.com/kusha2000/Money_Manager_App/assets/127003267/254fabb5-2d0b-4832-8f81-d695b76d2c03" width="300" height="400"><br><br>
+<img src="https://github.com/kusha2000/Money_Manager_App/assets/127003267/d768f9d7-cb86-403a-80ee-da2ba7a50000" width="300" height="400"><br><br>
+
